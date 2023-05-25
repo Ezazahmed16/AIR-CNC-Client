@@ -1,9 +1,41 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import { Link } from 'react-router-dom'
 import PrimaryButton from '../../Components/Button/PrimaryButton'
+import AuthProvider from '../../contexts/AuthProvider'
 
 const Signup = () => {
+  // const { createUserWithEmailAndPassword, updateUserProfile, verifyEmail } = useContext(AuthProvider);
+
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    const name =  event.target.name.value;
+    const profileImage =  event.target.image.files[0];
+    const email =  event.target.email.value;
+    const password =  event.target.password.value;
+
+    // Image processing with ImageBB
+    //
+    //https://api.imgbb.com/1/upload
+    const formData =  new FormData();
+    formData.append('image', profileImage)
+
+    const url = `https://api.imgbb.com/1/upload?&key=0ce36968e1c843b3c7d2d8ff489969af`
+    fetch(url, {
+      method: 'POST',
+      body: formData,
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data.data.display_url);
+
+      // Create User 
+
+    })
+    .catch(error => console.log(error))
+  }
+
   return (
     <div className='flex justify-center items-center pt-8'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
@@ -12,6 +44,7 @@ const Signup = () => {
           <p className='text-sm text-gray-400'>Create a new account</p>
         </div>
         <form
+          onSubmit={handleSubmit}
           noValidate=''
           action=''
           className='space-y-12 ng-untouched ng-pristine ng-valid'
