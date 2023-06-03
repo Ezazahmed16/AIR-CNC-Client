@@ -1,24 +1,31 @@
 import React, { useContext } from 'react'
 
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import PrimaryButton from '../../Components/Button/PrimaryButton'
-import AuthProvider from '../../contexts/AuthProvider'
+import toast from 'react-hot-toast'
+import { AuthContext } from '../../contexts/AuthProvider'
+import SmallSpinner from '../../Components/Spinner/SmallSpinner'
+import { setAuthToken } from '../../api/auth'
+
 
 const Signup = () => {
-  // const { createUserWithEmailAndPassword, updateUserProfile, verifyEmail } = useContext(AuthProvider);
+  const { createUser, updateUserProfile, verifyEmail, signInWithGoogle, loading, setLoading } = useContext(AuthContext)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/';
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    const name =  event.target.name.value;
-    const profileImage =  event.target.image.files[0];
-    const email =  event.target.email.value;
-    const password =  event.target.password.value;
+    const name = event.target.name.value;
+    const profileImage = event.target.image.files[0];
+    const email = event.target.email.value;
+    const password = event.target.password.value;
 
     // Image processing with ImageBB
     //
     //https://api.imgbb.com/1/upload
-    const formData =  new FormData();
+    const formData = new FormData();
     formData.append('image', profileImage)
 
     const url = `https://api.imgbb.com/1/upload?&key=0ce36968e1c843b3c7d2d8ff489969af`
@@ -26,14 +33,59 @@ const Signup = () => {
       method: 'POST',
       body: formData,
     })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data.data.display_url);
+      .then(res => res.json())
+      .then(data => {
+        console.log(data.data.display_url);
 
-      // Create User 
+        // Create User 
+        createUser(email, password)
+          .then((userCredential) => {
+            // Signed in 
+            //get token jwt
+            setAuthToken(userCredential.user)
+            // Update user name and profile image
+            updateUserProfile(name, data.data.display_url)
+              .then((result) => {
+                console.log(result);
 
-    })
-    .catch(error => console.log(error))
+                // send email address verification
+                verifyEmail()
+                  .then(() => {
+                    toast.success('Please check you mail for verification link.')
+                    navigate(from, { replace: true })
+                  })
+                  .catch((error) => {
+                    const errorMessage = error.message;
+                    toast.error(errorMessage)
+                    setLoading(false)
+                  });
+              })
+              .catch((error) => {
+                const errorMessage = error.message;
+                toast.error(errorMessage)
+                setLoading(false)
+              });
+            console.log(userCredential.user)
+          })
+          .catch((error) => {
+            const errorMessage = error.message;
+            toast.error(errorMessage)
+            setLoading(false)
+          });
+
+      })
+      .catch(error => console.log(error))
+  }
+
+  const handleGoogleSingin = (e) => {
+    signInWithGoogle()
+      .then((result) => {
+        //get token jwt
+        setAuthToken(result.user)
+        toast.success('Login Success')
+        navigate(from, { replace: true })
+      })
+      .catch(err => console.log(err))
   }
 
   return (
@@ -112,7 +164,7 @@ const Signup = () => {
                 type='submit'
                 classes='w-full px-8 py-3 font-semibold rounded-md bg-gray-900 hover:bg-gray-700 hover:text-white text-gray-100'
               >
-                Sign up
+                {loading ? <SmallSpinner></SmallSpinner> : 'Sing up'}
               </PrimaryButton>
             </div>
           </div>
@@ -125,7 +177,7 @@ const Signup = () => {
           <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
         <div className='flex justify-center space-x-4'>
-          <button aria-label='Log in with Google' className='p-3 rounded-sm'>
+          <button onClick={handleGoogleSingin} aria-label='Log in with Google' className='p-3 rounded-sm'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 32 32'
