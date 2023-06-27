@@ -8,8 +8,10 @@ import Main from '../Layout/Main'
 import ComingSoon from '../Pages/Shared/ComingSoon'
 import Details from '../Pages/Details'
 import SearchResult from '../Pages/SearchResult'
-import CheckoutCart from '../Components/CheckoutCart'
 import PrivateRoute from './PrivateRoute'
+import Checkout from '../Pages/Checkout'
+import DashboardLayout from '../Layout/DashboardLayout'
+import Welcome from '../Pages/Dashboard/Welcome'
 
 const router = createBrowserRouter([
   {
@@ -31,7 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/checkout',
-        element: <PrivateRoute><CheckoutCart /></PrivateRoute>,
+        element: <PrivateRoute><Checkout /></PrivateRoute>,
       },
       {
         path: '/login',
@@ -46,6 +48,16 @@ const router = createBrowserRouter([
         element: <ComingSoon />,
       },
     ],
+  },
+  {
+    path: '/dashboard',
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: '',
+        element: <Welcome></Welcome>
+      }
+    ]
   },
 ])
 

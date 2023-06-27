@@ -1,6 +1,6 @@
 import React from 'react'
 
-const WhosComing = ({ setSelectedIndex, host }) => {
+const WhosComing = ({ setSelectedIndex, host, bookingData, setBookingData }) => {
   console.log(host)
   return (
     <>
@@ -24,17 +24,21 @@ const WhosComing = ({ setSelectedIndex, host }) => {
       <textarea
         className='border block my-5 p-2'
         placeholder={`Hello ${host?.name}! Cant wait to spend 4 night in your home`}
-        name=''
-        id=''
-        cols='60'
-        rows='10'
-      ></textarea>
-      <button
-        className='py-2 px-4 rounded-md hover:text-gray-100 bg-gradient-to-r from-emerald-500 to-lime-500 text-white'
-        onClick={() => setSelectedIndex(2)}
-      >
-        Continue
-      </button>
+        value={bookingData.message}
+        onChange={e => 
+          setBookingData({...bookingData, message: e.target.value})
+        }
+      name=''
+      id=''
+      cols='60'
+      rows='10'
+      ></textarea >
+    <button
+      className='py-2 px-4 rounded-md hover:text-gray-100 bg-gradient-to-r from-emerald-500 to-lime-500 text-white'
+      onClick={() => setSelectedIndex(2)}
+    >
+      Continue
+    </button>
     </>
   )
 }

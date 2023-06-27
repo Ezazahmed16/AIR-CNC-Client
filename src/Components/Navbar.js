@@ -11,12 +11,12 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout()
-    .then(() => {
-      toast.success('Logout successfull.')
-    })
-    .catch(err => {
-      console.log(err)
-    })
+      .then(() => {
+        toast.success('Logout successfull.')
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   return (
@@ -72,7 +72,10 @@ const Navbar = () => {
                     </Link>
 
                     <hr className='border-gray-200' />
-                    <div onClick={handleLogout} className='flex items-center cursor-pointer p-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform  hover:bg-gray-100 '>
+                    <div onClick={() => {
+                      handleLogout()
+                      setIsDropdownOpen(false)
+                    }} className='flex items-center cursor-pointer p-3 text-sm text-gray-600 capitalize transition-colors duration-200 transform  hover:bg-gray-100 '>
                       <svg
                         className='w-5 h-5 mx-1'
                         viewBox='0 0 24 24'
