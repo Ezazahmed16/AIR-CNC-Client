@@ -12,6 +12,11 @@ import PrivateRoute from './PrivateRoute'
 import Checkout from '../Pages/Checkout'
 import DashboardLayout from '../Layout/DashboardLayout'
 import Welcome from '../Pages/Dashboard/Welcome'
+import MyBooking from '../Pages/Dashboard/MyBooking'
+import BecomeAHost from '../Pages/Dashboard/BecomeAHost'
+import AllUsers from '../Pages/Dashboard/AllUsers'
+import AllBookings from '../Pages/Dashboard/AllBookings'
+import AddHome from '../Pages/AddHome'
 
 const router = createBrowserRouter([
   {
@@ -51,12 +56,32 @@ const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <DashboardLayout />,
+    element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
     children: [
       {
         path: '',
         element: <Welcome></Welcome>
-      }
+      },
+      {
+        path: 'my-bookings',
+        element: <PrivateRoute><MyBooking></MyBooking></PrivateRoute>
+      },
+      {
+        path: 'become-host',
+        element: <PrivateRoute><BecomeAHost></BecomeAHost></PrivateRoute>
+      },
+      {
+        path: 'all-users',
+        element: <PrivateRoute><AllUsers></AllUsers></PrivateRoute>
+      },
+      {
+        path: 'all-bookings',
+        element: <PrivateRoute><AllBookings></AllBookings></PrivateRoute>
+      },
+      {
+        path: 'add-home',
+        element: <PrivateRoute><AddHome></AddHome></PrivateRoute>
+      },
     ]
   },
 ])

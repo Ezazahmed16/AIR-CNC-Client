@@ -12,7 +12,7 @@ const Welcome = () => {
                 <p className='text-6xl font-bold mr-2'>me</p>
                 <p className='text-6xl font-bold'>To</p>
             </div>
-            <div className='flex justify-center text-gray-500 items-center mt-4'>
+            <div className='flex justify-center text-gray-500 items-center mt-5'>
                 <p className='text-3xl font-medium'>User Dashboard</p>
             </div>
         </div>
